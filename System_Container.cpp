@@ -5,9 +5,7 @@ classes to construct the system.
 /*/
 
 // Including necessary libraries and classes
-#include "Astro_Object.h"
-#include "Orbiting_Body.h"
-#include "Central_Body.h"
+#include "System_Container.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -19,6 +17,11 @@ using namespace std;
 System_Container::System_Container()
 {
 	systemName = "Default";
+}
+
+System_Container::System_Container(string name)
+{
+	systemName = name;
 }
 
 // Function to set system container name
@@ -33,10 +36,10 @@ void System_Container::addOrbitingBody(Orbiting_Body newSat)
 	systemSatellites.push_back(newSat);
 }
 
-// Function to add a central body to system container - this should only be done once
-void System_Container::addCentralBody(Central_Body newCentralBody)
+// Function to add a central object to system container - this should only be done once
+void System_Container::addCentralObject(Central_Object newCentralObject)
 {
-	systemCentralBody = newCentralBody;
+	systemCentralObject = newCentralObject;
 }
 
 // Function to get total number of objects in system container
@@ -54,9 +57,11 @@ int System_Container::getNumObjects()
 // Remove an orbiting body from the system
 bool System_Container::removeOrbitingBody(string satName) 
 {
+	// Initialising variables
 	bool satFound = false;
 	const int SIZE_VECTOR = systemSatellites.size();
 
+	// Check if object found and erase if found
 	for (int i = 0; i < SIZE_VECTOR; i++)
 	{
 		if (satName == systemSatellites[i].getName())
@@ -66,23 +71,29 @@ bool System_Container::removeOrbitingBody(string satName)
 		}
 	}	
 
+	// Return boolean so that an error message can be printed in the driver in case object not found
 	return satFound;
 }
 
 // Creates a text file catalogue of all objects in system at a given time
+/*/ Catalogue of objects in file chosen over console output since the console is used for direct input
+and visualisation for the simulation
+/*/
 void System_Container::getCatalogue()
 {
+	// Creates a data file called system_catalogue
 	ofstream dataFile("system_catalogue.txt");
-	const int SIZE_VECTOR = systemSatellites.size();
+	const int SIZE_VECTOR = systemSatellites.size(); // Storing num orbiting objects
 
+	// If data file is open writes to file
 	if (dataFile.is_open())
 	{
 		dataFile << "Data Format: \n";
 		dataFile << "Name, " << "Mass, " << "Temp, " << "Radius, " << "Orbital Radius, " << "Orbital Speed" << "\n";
 		
 		dataFile << "Central Body/Object \n";
-		dataFile << systemCentralBody.getName() << ", " << systemCentralBody.getObjMass() << ", " << systemCentralBody.getTemp();
-		dataFile << ", " << systemCentralBody.getObjRadius() << ", " << systemCentralBody.getOrbitalRad() << ", " << systemCentralBody.getOrbitalSpeed() << "\n";
+		dataFile << systemCentralObject.getName() << ", " << systemCentralObject.getObjMass() << ", " << systemCentralObject.getTemp();
+		dataFile << ", " << systemCentralObject.getObjRadius() << ", " << systemCentralObject.getOrbitalRad() << ", " << systemCentralObject.getOrbitalSpeed() << "\n";
 
 		dataFile << "Orbiting Satellites/Objects \n";
 		for (int i = 0; i < SIZE_VECTOR; i++)
@@ -92,7 +103,12 @@ void System_Container::getCatalogue()
 		}
 	}
 
+	// Closes data file - a txt file should then appear in directory containing files
 	dataFile.close();
 }
 
+System_Container::~System_Container()
+{
+	
+}
 

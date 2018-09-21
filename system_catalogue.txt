@@ -1,0 +1,10 @@
+Data Format: 
+Name, Mass, Temp, Radius, Orbital Radius, Orbital Speed
+Central Body/Object 
+Sagitarius A, 100, 0, 1, 0, 0
+Orbiting Satellites/Objects 
+Star1, 1, 0, 1.9, 1, 0
+Star2, 3.5, 0, 3.38, 2.5, 0
+Star3, 2, 0, 4.48, 3, 0
+Star4, 100, 0, 5.52, 4.5, 0
+Star5, 4, 0, 2.43, 1.8, 0

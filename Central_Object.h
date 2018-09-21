@@ -23,9 +23,12 @@ class Central_Object : public Astro_Object // Central object class inherits from
 		Central_Object();
 		Central_Object(std::string name, float radius, float temp, float mass);
 
+		// Overloading pure virtual functions in abstract parent class
+		void setOrbitalSpeed(float centralObjMass);
+		void updatePos(int time, float centralObjMass);
+
 		// Destructors
 		~Central_Object();
-	
 };
 
-#endif CENTRAL_OBJECT_H
+#endif

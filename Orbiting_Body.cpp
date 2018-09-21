@@ -10,6 +10,8 @@ class .h file.
 using namespace std;
 
 const float G_CONST = 6.67408 * pow(10.0, -11.0); // Definition of gravitational constant
+const float SOLAR_MASS = 1.9891 * pow(10.0, 30.0);
+const float ASTRO_UNIT = 1.496 * pow(10.0, 11.0);
 
 // Constructor definitions for orbiting body class
 Orbiting_Body::Orbiting_Body() : Astro_Object()
@@ -24,20 +26,19 @@ Orbiting_Body::Orbiting_Body(float mass, float radius, float temp, float orbitRa
 }
 
 // Function to update orbiting body position
-void Orbiting_Body::updatePos(int time)
+void Orbiting_Body::updatePos(int time, float centralObjMass)
 {
-	position[0] = orbitalRadius * cos(sqrt((G_CONST * objectMass) / pow(orbitalRadius, 3.0)) * time);
-	position[1] = orbitalRadius * sin(sqrt((G_CONST * objectMass) / pow(orbitalRadius, 3.0)) * time);
+	position[0] = ((orbitalRadius * ASTRO_UNIT) * cos(sqrt((G_CONST * (centralObjMass * SOLAR_MASS)) / pow((orbitalRadius * ASTRO_UNIT), 3.0)) * time)) / (ASTRO_UNIT);
+	position[1] = ((orbitalRadius * ASTRO_UNIT) * sin(sqrt((G_CONST * (centralObjMass * SOLAR_MASS)) / pow((orbitalRadius * ASTRO_UNIT), 3.0)) * time)) / (ASTRO_UNIT);
 }
 
 // Calculates orbital speed
-void Orbiting_Body::setOrbitalSpeed()
+void Orbiting_Body::setOrbitalSpeed(float centralObjMass)
 {
-	orbitalSpeed = sqrt((G_CONST * objectMass) / orbitalRadius);
+	orbitalSpeed = sqrt((G_CONST * (centralObjMass * SOLAR_MASS)) / (orbitalRadius * ASTRO_UNIT));
 }
 
-// Returns orbital speed - from pure virtual definition
-float Orbiting_Body::getOrbitalSpeed()
+Orbiting_Body::~Orbiting_Body()
 {
-	return orbitalSpeed;
+
 }

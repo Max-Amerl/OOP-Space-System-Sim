@@ -13,12 +13,19 @@ Astro_Object::Astro_Object()
 	/*/ Setting default values of each class - don't expect user to try to use simulation
 	without inputting their own data /*/
 	orbitalSpeed = 0;
-	position = {0, 0};
+
+	for (int i = 0; i < 2; i++)
+	{
+		position[i] = 0;
+	}
+
 	temperature = 0;
 	objectRadius = 0;
 	objectName = "Default";
 	objectMass = 0;
-	orbi
+	orbitalRadius = 0;
+	orbitalSpeed = 0;
+
 }
 
 Astro_Object::Astro_Object(float temp, float radius, std::string name, float mass, float * initPos, float orbitRad)
@@ -66,6 +73,11 @@ float Astro_Object::getObjMass()
 float Astro_Object::getOrbitalRad()
 {
 	return orbitalRadius;
+}
+
+float Astro_Object::getOrbitalSpeed()
+{
+	return orbitalSpeed;
 }
 
 // Defining setters initialised in class definition
