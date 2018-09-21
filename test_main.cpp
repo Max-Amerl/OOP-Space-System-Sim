@@ -49,7 +49,7 @@ int main(void)
 	gravSystem.addCentralObject(centralSMBH);
 	float * positionPtr;
 
-	while (timeCounter <= 100000)
+	while (timeCounter <= 3300000)
 	{
 		for (int i = 0; i < NUM_SAT; i++)
 		{
@@ -59,7 +59,7 @@ int main(void)
 		}
 		cout << "--------------------------" << endl;
 
-		timeCounter += 1000; 
+		timeCounter += 40000; 
 	}
 
 
