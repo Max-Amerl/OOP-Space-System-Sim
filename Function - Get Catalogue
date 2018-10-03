@@ -1,1 +1,8 @@
 #include <iostream>
+#include <string>
+
+if (cin >> "C" || cin >> "c"){
+  System_Container::getCatalogue()
+  cout << "Success - Catalogue file in code directory with name system_catalogue.txt" << endl;
+  cout << "--------" << endl;
+}
