@@ -23,11 +23,18 @@ int main(void)
 	Orbiting_Body satellites[NUM_SAT];
 	System_Container gravSystem = System_Container("Star System");
 	Central_Object centralSMBH = Central_Object("Sagitarius A", 1, 8000, 100);
+	centralSMBH.setOrbitalSpeed(100);
+
+	Central_Object * centralObj = new Central_Object;
+
+	centralObj = &centralSMBH;
+
+	Orbiting_Body * sysSats = new Orbiting_Body[NUM_SAT];
 
 	string names[NUM_SAT] = {"Star1", "Star2", "Star3", "Star4", "Star5"};
 	float temperatures[NUM_SAT] = {2000.383, 5800.473, 19101.374, 8372.245, 2929.781};
 	float orbitalRadii[NUM_SAT] = {1.0, 2.5, 3.0, 4.5, 1.8};
-	float masses[NUM_SAT] = {1.0, 3.5, 2.0, 100, 4.0};
+	float masses[NUM_SAT] = {1.0, 3.5, 2.0, 10, 4.0};
 	float objRadius[NUM_SAT] = {1.9, 3.38, 4.48, 5.52, 2.43};
 	float initPos[NUM_SAT][2];
 
@@ -41,29 +48,40 @@ int main(void)
 
 	for (int i = 0; i < NUM_SAT; i++)
 	{
+
 		satellites[i] = Orbiting_Body(masses[i], objRadius[i], temperatures[i], orbitalRadii[i], names[i], initPos[i]);
-		gravSystem.addOrbitingBody(satellites[i]);
-		satellites[i].setOrbitalSpeed(100);
+		
+
+		cout << &satellites[i] << endl;
+		sysSats[i] = satellites[i];
+		sysSats[i].setOrbitalSpeed(100);
+		gravSystem.addOrbitingBody(&sysSats[i]);
+		// cout << satellites[i].getOrbitalSpeed() << endl;
 	}
 
-	gravSystem.addCentralObject(centralSMBH);
+	gravSystem.addCentralObject(centralObj);
 	float * positionPtr;
 
-	while (timeCounter <= 3300000)
+	while (timeCounter <= 100000)
 	{
 		for (int i = 0; i < NUM_SAT; i++)
 		{
-			satellites[i].updatePos(timeCounter, centralSMBH.getObjMass());
-			positionPtr = satellites[i].getPosition();
+			sysSats[i]. updatePos(timeCounter, centralObj -> getObjMass());
+			positionPtr = sysSats[i].getPosition();
 			cout << "Star " << i+1 << " (" << *(positionPtr + 0) << ", " << *(positionPtr + 1) << ")" << endl;
 		}
 		cout << "--------------------------" << endl;
 
-		timeCounter += 40000; 
+		timeCounter += 1000; 
 	}
 
 
+	// for (int i = 0; i < 5; i++)
+	// {
+	// 	cout << sysSats[i].getOrbitalSpeed() << endl;
+	// }
 	gravSystem.getCatalogue();
-	
+	delete[] centralObj;
+	delete[] sysSats;
 	return 0;
 }

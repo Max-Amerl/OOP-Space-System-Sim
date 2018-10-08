@@ -20,7 +20,7 @@ class Orbiting_Body : public Astro_Object
 		Orbiting_Body(float mass, float radius, float temp, float orbitRad, std::string name, float * initPos);
 
 		// Functions to update position and calculate/return orbital speed
-		void updatePos(int time, float centralObjMass);
+		void updatePos(float time, float centralObjMass);
 		void setOrbitalSpeed(float centralObjMass); 
 
 		// Destructor for Orbiting_Body class

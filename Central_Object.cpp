@@ -8,6 +8,8 @@ All state and other behaviours are inherited from the Astro_Object Class.
 #include <string>
 using namespace std;
 
+#include <iostream>
+
 float constPos[2] = {0.0, 0.0}; // Initial position of central body - stays same for all objects
 
 // Default constructor definition with inheritance from Astro_Object
@@ -26,9 +28,11 @@ Central_Object::Central_Object(string name, float radius, float temp, float mass
 void Central_Object::setOrbitalSpeed(float centralObjMass)
 {
 	orbitalSpeed = 0;
+	cout << "SET CENTRAL" << endl;
+
 }
 
-void Central_Object::updatePos(int time, float centralObjMass)
+void Central_Object::updatePos(float time, float centralObjMass)
 {
 	for (int i = 0; i < 2; i++)
 	{

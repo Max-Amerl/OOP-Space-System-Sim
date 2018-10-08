@@ -7,6 +7,7 @@ class .h file.
 #include "Orbiting_Body.h"
 #include <string>
 #include <cmath>
+
 using namespace std;
 
 const float G_CONST = 6.67408 * pow(10.0, -11.0); // Definition of gravitational constant
@@ -26,7 +27,7 @@ Orbiting_Body::Orbiting_Body(float mass, float radius, float temp, float orbitRa
 }
 
 // Function to update orbiting body position
-void Orbiting_Body::updatePos(int time, float centralObjMass)
+void Orbiting_Body::updatePos(float time, float centralObjMass)
 {
 	position[0] = ((orbitalRadius * ASTRO_UNIT) * cos(sqrt((G_CONST * (centralObjMass * SOLAR_MASS)) / pow((orbitalRadius * ASTRO_UNIT), 3.0)) * time)) / (ASTRO_UNIT);
 	position[1] = ((orbitalRadius * ASTRO_UNIT) * sin(sqrt((G_CONST * (centralObjMass * SOLAR_MASS)) / pow((orbitalRadius * ASTRO_UNIT), 3.0)) * time)) / (ASTRO_UNIT);

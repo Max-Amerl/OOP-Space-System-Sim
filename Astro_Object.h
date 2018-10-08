@@ -20,7 +20,7 @@ class Astro_Object
 
 	// Protected states that are only accessible in other subclasses 
 	protected:
-		float orbitalSpeed; // Store orbital speed as floating point value - Speed in km/s
+		float orbitalSpeed; // Store orbital speed as floating point value - Speed in m/s
 		float orbitalRadius; // Orbital radius in AU
 		float objectMass; // Object mass in solar masses
 		float position[2]; // Store position as a 2 element array (for x and y pos) - Position in AU (astronomical units)
@@ -32,7 +32,7 @@ class Astro_Object
 
 		/*/ Pure virtual definition of position update function - so that it is only accessible in orbiting 
 		body subclass i.e. will not be callable for a central object /*/
-		virtual void updatePos(int time, float centralObjMass) = 0;
+		virtual void updatePos(float time, float centralObjMass) = 0;
 
 		// Getters to return states
 		float * getPosition();
@@ -51,7 +51,6 @@ class Astro_Object
 		void setStartPos(float * newPos);
 		void setOrbitalRad(float newOrbitRad);
 		virtual void setOrbitalSpeed(float centralObjMass) = 0; // Pure virtual function for definition in orbiting body class
-
 
 		// Destructor for use to free dynamic memory allocated on the heap
 		~Astro_Object();	

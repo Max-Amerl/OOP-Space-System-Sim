@@ -12,17 +12,44 @@ This is the primary driver for the system simulation that implements all functio
 #include <iostream>
 using namespace std;
 
+extern void startSim();
+extern void getData(System_Container orbitSystem);
+extern void viewInstructions();
+extern void runSimulation(System_Container * container);
+
 int main(void)
 {
-	int numOrbitingBodies;
+	// int numOrbitingBodies;
 
-	cout << "This is a simulation for an astronomical system, modelling orbits of objects" << endl;
-	cout << "Enter the desired number of orbiting bodies and press enter to continue: " << endl;
+	// cout << "This is a simulation for an astronomical system, modelling orbits of objects" << endl;
+	// cout << "Enter the desired number of orbiting bodies and press enter to continue: " << endl;
 
-	cin << numOrbitingBodies;
+	// cin << numOrbitingBodies;
 
-	
+	startSim();
+	viewInstructions();
 
+	string checkInput;
 
+	cin >> checkInput;
+	cin.get();
 
+	if (checkInput == "B" || checkInput == "b")
+	{
+		string systemName;
+
+		cout << "Input System Name (no spaces):" << endl;
+
+		cin >> systemName;
+		cin.get();
+		
+		System_Container orbitSystem = System_Container(systemName);
+
+		getData(orbitSystem);
+		
+		cout << "Press 'S' to start simulation" << endl;
+		
+		runSimulation(&orbitSystem);
+	}
 }
+
