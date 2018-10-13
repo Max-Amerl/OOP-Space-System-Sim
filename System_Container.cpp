@@ -10,6 +10,10 @@ classes to construct the system.
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <cmath>
+
+#define PI 3.1415926536
+const float ASTRO_UNIT = 1.496 * pow(10.0, 11.0);
 
 using namespace std;
 
@@ -17,13 +21,13 @@ using namespace std;
 System_Container::System_Container()
 {
 	systemName = "Default";
-	systemCentralObject = new Central_Object;
+	// systemCentralObject = new Central_Object;
 }
 
 System_Container::System_Container(string name)
 {
 	systemName = name;
-	systemCentralObject = new Central_Object;
+	// systemCentralObject = new Central_Object;
 }
 
 // Function to set system container name
@@ -33,7 +37,7 @@ void System_Container::setSystemName(string newName)
 }
 
 // Function to add an orbiting body to system container
-void System_Container::addOrbitingBody(Astro_Object * newSat)
+void System_Container::addOrbitingBody(Orbiting_Body * newSat)
 {
 	systemSatellites.push_back(newSat);
 	// systemSatellites[systemSatellites.size()-1] -> setOrbitalSpeed(systemCentralObject -> getObjMass());
@@ -41,28 +45,34 @@ void System_Container::addOrbitingBody(Astro_Object * newSat)
 }
 
 // Function to add a central object to system container - this should only be done once
-void System_Container::addCentralObject(Astro_Object * newCentralObject)
+void System_Container::addCentralObject(Central_Object * newCentralObject)
 {
 	systemCentralObject = newCentralObject;
 }
 
 float * System_Container::runSim(float * time)
 {
-	float satPositions[systemSatellites.size()][2];
+	float * satPositions = new float[systemSatellites.size()*2];
 	float * posPtr;
-	float * returnPointer;
+
+	// // // cout << "CONT LINE 60" << endl;
 
 	for (int i = 0; i < systemSatellites.size(); i++)
 	{
-		systemSatellites[i] -> updatePos(time[i], systemCentralObject -> getObjMass());
+		// cout << "CONT LINE 64   "<< i << "   "  << systemSatellites.size() << "  " << *(time+i) << " " << systemCentralObject -> getObjMass()  << endl;
+		// cout << systemSatellites[i] << endl;
+		systemSatellites[i]  -> updatePos(time[i], systemCentralObject -> getObjMass());
+		// cout << "TIME: " << *(time + i) << endl;
+	// 	// cout << "CONT LINE 66" << endl;
 		posPtr = systemSatellites[i] -> getPosition();
-		satPositions[i][0] = *(posPtr + 0);
-		satPositions[i][1] = *(posPtr + 1); 
-	}
+	// // 	// cout << "CONT LINE 68"<< endl;
+		satPositions[i*2] = *(posPtr + 0);
 
-	returnPointer = &satPositions[0][0];
+		satPositions[i*2+1] = *(posPtr + 1); 
+
+	}
 	
-	return returnPointer;
+	return satPositions;
 }
 
 // Function to get total number of objects in system container
@@ -96,6 +106,24 @@ bool System_Container::removeOrbitingBody(string satName)
 
 	// Return boolean so that an error message can be printed in the driver in case object not found
 	return satFound;
+}
+
+float * System_Container::getOrbitalPeriods()
+{
+	// cout << "RUNNING GET ORB PERIODS" << endl;
+	const int SIZE_VECTOR = systemSatellites.size(); // Storing num orbiting objects	
+	// cout << "SIZE_VECTOR " << SIZE_VECTOR << endl;
+	float * orbitalPeriods = new float[SIZE_VECTOR];
+
+	for (int i = 0; i < SIZE_VECTOR; i++)
+	{
+		// cout << "FOR LOOP EXECUTES" << endl;
+		orbitalPeriods[i] = (2*PI * ASTRO_UNIT * (systemSatellites[i] -> getOrbitalRad())) / (systemSatellites[i] -> getOrbitalSpeed()); 
+		// cout << "2 PI R: " << 2*PI * ASTRO_UNIT * (systemSatellites[i] -> getOrbitalRad()) << endl;
+		// cout << "speed: " << (systemSatellites[i] -> getOrbitalSpeed()) << endl;
+	}
+
+	return orbitalPeriods;
 }
 
 // Creates a text file catalogue of all objects in system at a given time
@@ -137,6 +165,8 @@ void System_Container::getCatalogue()
 	// Closes data file - a txt file should then appear in directory containing files
 	dataFile.close();
 }
+
+
 
 System_Container::~System_Container()
 {

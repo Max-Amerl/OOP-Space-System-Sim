@@ -24,30 +24,24 @@ void startSim()
 // ------------------------- Data Input Function ------------------------- //
 
 // Run after 'B' key is pressed
-void getData(System_Container orbitSystem)
+void getData(System_Container * orbitSystem, Orbiting_Body * orbitingObjs, int numOrbitingObj)
 {
 	// --------------- User Data Input --------------- //
-	int numOrbitingObj;
-
-	cout << "Input Required Number of Orbiting Objects: " << endl;
-	cin >> numOrbitingObj;
-
-	bool inputFinished = false;
 
 	string dataArray[numOrbitingObj];
 	string centralObjInput;
 	
-	cout << endl;
-	
+
 	for (int i = 0; i < numOrbitingObj; i++)
 	{
 		cout << "Input Object " << i+1 << " Data" << endl;
 		cout << "Format: Name, Mass, Radius, Temperature, Orbital Radius (comma separated values)" << endl;
-		cin.get();
+		cin.ignore(1, '\n');
 		getline(cin, dataArray[i]);
 		cout << endl;
 	}
 
+	// char * centralObjCharArray = centralObjInput.c_str();
 	// char * orbitingObjData[numOrbitingObj];
 
 	// for (int i = 0; i < numOrbitingObj; i++)
@@ -57,31 +51,27 @@ void getData(System_Container orbitSystem)
 
 	cout << "Central Object Data Input - Input Info String" << endl;
 	cout << "Format: Name, Mass, Radius, Temperature (comma separated values)" << endl;
-	cin.get();
+	cin.ignore(0, '\n');
 	getline(cin, centralObjInput);
-	cout << "LINE 62" << endl;
-	char * centralObjData;
-	cout << "LINE 64" << endl;
+	
+	cout << endl;
 
+	char centralObjData[1000];
 	strcpy(centralObjData, centralObjInput.c_str());
 	// centralObjData = &centralObjInput;
 
-	cout << endl;
+	
 
 	// --------------- Object Setup --------------- //
 	// Orbiting_Body orbitingObjs[numOrbitingObj];
-	cout << "LINE 73" << endl;
-
-	Orbiting_Body * orbitingObjs = new Orbiting_Body[numOrbitingObj];
-	Central_Object * centralBody = new Central_Object;
-	Central_Object centreObj;
-	// Central_Object centralBody;
-	cout << "LINE 77" << endl;
+	// Orbiting_Body * orbitingObjs = new Orbiting_Body[numOrbitingObj]; // MOVE THIS TO MAIN
+	Central_Object * centralBody;
+	Central_Object tempCentral;
 
 	const int TEMP_SIZE = 5;
 	const int TEMP_SIZE_2 = 4;
-	char objTempInfo[TEMP_SIZE];
-	char centralObjInfo[TEMP_SIZE_2];
+	string objTempInfo[TEMP_SIZE];
+	string centralObjInfo[TEMP_SIZE_2];
 	
 	// char dataStore[numOrbitingObj];
 
@@ -91,70 +81,86 @@ void getData(System_Container orbitSystem)
 	// }
 
 	char * tempTokPtr;
-	char delimiters[] = " ,";
+	char delimiters[] = ",";
 	int counter = 0;
 	float initPos[2] = {0.0, 0.0};
 
-	string::size_type size;
+
+	string::size_type size1;
+	string::size_type size2;
+
+
+	// -------------- CENTRAL BODY SETUP -------------- //
+	tempTokPtr = strtok(centralObjData, delimiters);
+
+	while (tempTokPtr != NULL)
+	{
+		centralObjInfo[counter] = tempTokPtr;
+		
+		tempTokPtr = strtok(NULL, delimiters);
+		counter++;
+	}
+
+	const int NUM_TRAITS_CENTRAL = 4;
+	string centralObjString[NUM_TRAITS_CENTRAL];
+
+	for (int i = 0; i < NUM_TRAITS_CENTRAL; i++)
+	{
+		centralObjString[i] = *(centralObjInfo + i);
+	}
+
+	tempCentral = Central_Object(centralObjString[0], stof(centralObjString[2], &size1), stof(centralObjString[3], &size1), stof(centralObjString[1], &size1));
+	centralBody = &tempCentral;
+
+	// -------------- ORBITING BODY SETUP -------------- //
 	const int ORBIT_TRAIT_NUM = 5;
 	string orbitObjInfo[ORBIT_TRAIT_NUM];
+	counter = 0;
 
-	char * functionDataLine;
-
-	cout << "LINE 98" << endl;
+	char functionDataLine[1000];
 	for (int i = 0; i < numOrbitingObj; i++)
 	{
 		strcpy(functionDataLine, dataArray[i].c_str());
+
 		tempTokPtr = strtok(functionDataLine, delimiters);
 
 		while (tempTokPtr != NULL)
 		{
-			objTempInfo[counter] = *tempTokPtr;
+			objTempInfo[counter] = tempTokPtr;
 			tempTokPtr = strtok(NULL, delimiters);
 			counter++;
 		}
 
 		for (int j = 0; j < ORBIT_TRAIT_NUM; j++)
 		{
-			orbitObjInfo[j] = objTempInfo[j]; 		
+			orbitObjInfo[j] = objTempInfo[j];
+			cout << "INFO " << orbitObjInfo[j] << endl;
 		}
-	
-		orbitingObjs[i] = Orbiting_Body(stof(orbitObjInfo[1], &size), stof(orbitObjInfo[2], &size), stof(orbitObjInfo[3], &size), stof(orbitObjInfo[4], &size), orbitObjInfo[0], initPos);			
+		cout << "STRING " << orbitObjInfo[1] << endl;
+		cout << "FLOAT CONVERSION " << stof(orbitObjInfo[1], &size2) << endl;
+
+		*(orbitingObjs + i) = Orbiting_Body(stof(orbitObjInfo[1], &size2), stof(orbitObjInfo[2], &size2), stof(orbitObjInfo[3], &size2), stof(orbitObjInfo[4], &size2), orbitObjInfo[0], initPos);
+		(orbitingObjs + i) -> setOrbitalSpeed(centralBody -> getObjMass());			
 	}
 
-	cout << "LINE 118" << endl;
-	tempTokPtr = strtok(centralObjData, delimiters);
-	counter = 0;
+		
 
-	while (tempTokPtr != NULL)
-	{
-		centralObjInfo[counter] = *tempTokPtr;
-		tempTokPtr = strtok(NULL, delimiters);
-		counter++;
-	}
-
-	cout << "LINE 130" << endl;
-	const int NUM_TRAITS_CENTRAL = 4;
-	string centralObjString[NUM_TRAITS_CENTRAL];
-
-	for (int i = 0; i < NUM_TRAITS_CENTRAL; i++)
-	{
-		centralObjString[i] = centralObjInfo[i];
-	}
-
-	centreObj = Central_Object(centralObjString[0], stof(centralObjString[2], &size), stof(centralObjString[3], &size), stof(centralObjString[1], &size));	
-	centralBody = &centreObj;
-
-	cout << "LINE 142" << endl;
 	for (int i = 0; i < numOrbitingObj; i++)
-	{
-		orbitSystem.addOrbitingBody(orbitingObjs + i);
+	{	
+
+		orbitSystem -> addOrbitingBody(&orbitingObjs[i]);
+		
 	}
 
-	orbitSystem.addCentralObject(centralBody);
+	centralBody -> setOrbitalSpeed(0);
+	orbitSystem -> addCentralObject(centralBody);
 
-	delete[] orbitingObjs;
-	delete centralBody;
+	// Getting catalogue of bodies
+	cout << "See system_catalogue.txt in code directory for a record of all objects and associated information" << endl;
+	cout << endl;
+	orbitSystem -> getCatalogue();
+
+	// delete[] orbitingObjs;
 }
 
 void viewInstructions()
@@ -186,64 +192,93 @@ void viewInstructions()
 
 void runSimulation(System_Container * container)
 {
-	cout << "RUNNING SIM" << endl;
 	float * satellitePositions;
 	int numSatellites = (container -> getNumObjects()) - 1;
 	float timeValues[numSatellites];
 	bool runSim = false;
 
+	float * orbitalPeriods = container -> getOrbitalPeriods();
+
 	srand(time(NULL));
 
-	bool inputTaken = false;
+	bool timeLimit = false;
 	string inputStart;
 
-	float timeInc = 0.01;
 
-	while (inputTaken == false)
+	float timeInc = 300000;
+	
+	cin.ignore(1000, '\n');
+	cin >> inputStart;
+
+	// // while (inputTaken == false)
+	// // {
+	// // 	
+
+	// // 	if (inputStart == "S" || inputStart == "s")
+	// // 	{
+	// // 		inputTaken = true;
+	// // 		runSim = true;
+	// // 	}
+	// // }
+	// cout << "LINE 226" << endl;
+
+	if (inputStart == "S" || inputStart == "s")
 	{
-		cin >> inputStart;
-		cin.get();
-
-		if (inputStart == "S" || inputStart == "s")
-		{
-			inputTaken = true;
-			runSim = true;
-		}
-	}
-
-	for (int i = 0; i < numSatellites; i++)
-	{
-		timeValues[i] = (rand()/RAND_MAX) * 6.2831;
-	}
-
-	while (runSim == true)
-	{
-		satellitePositions = container -> runSim(timeValues);
-
-		// ------------ SOMETHING HERE FOR GRAPHICS -------------- //
-
-		// TEST CODE -- OUTPUT
-		for (int i = 0; i < numSatellites; i += 1)
-		{
-			cout << "-----------------------------" << endl;
-			cout << "Satellite " << i << " (" << *(satellitePositions + i) << *(satellitePositions + i + 1) << endl;
-		}
-
-		// END TEST CODE
-
 		for (int i = 0; i < numSatellites; i++)
 		{
-			timeValues[i] += timeInc;
+			timeValues[i] = (float(rand())/float(RAND_MAX)) * orbitalPeriods[i];
+			// cout << orbitalPeriods[i] << endl;
+			// cout << "Time Value " << i << ": " << timeValues[i] << endl;
 		}
 
-		for (int i = 0; i < numSatellites; i++)
+		// cout << "ORBITAL PERIOD MEM ADDRESS " << &orbitalPeriods << endl;
+
+		// // while (runSim == true)
+		// // {
+		// // if (inputStart == "S" || inputStart == "s")
+		// // {
+
+		// 		// ------------ SOMETHING HERE FOR GRAPHICS -------------- //
+
+		// 		// TEST CODE -- OUTPUT
+
+		// cout << "LINE 242" << endl;
+		while (timeLimit == false)
 		{
-			if (timeValues[i] >= 100000000)
+			// cout << "LINE 250" << endl;
+			satellitePositions = container -> runSim(timeValues);
+
+			// for (int i = 0; i < numSatellites; i++)
+			// {
+			// 	cout << i  <<  " " << numSatellites << " " << "POS " <<  *(satellitePositions + i*2) << " " << *(satellitePositions + i*2 + 1) << endl;
+			// }
+
+			// cout << "LINE 247" << endl;
+			for (int i = 0; i < numSatellites; i++)
 			{
-				break;
+				cout << "-----------------------------" << endl;
+				cout << "Satellite " << (i/2)+1 << " (" << *(satellitePositions + i*2) << ", " << *(satellitePositions + i*2 + 1) << ")" << endl;
 			}
+
+			for (int j = 0; j < numSatellites; j++)
+			{
+				timeValues[j] += timeInc;
+			}
+
+			for (int i = 0; i < numSatellites; i++)
+			{
+				if (timeValues[i] >= 1000000000)
+				{
+					timeLimit = true;
+				}
+			}
+
+			delete[] satellitePositions;
 		}
 	}
-}
+	// 	// }
 
+	delete[] orbitalPeriods;
+		// END TEST CODE
+}
 

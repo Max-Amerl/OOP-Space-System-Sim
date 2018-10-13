@@ -19,8 +19,9 @@ class System_Container
 {
 	// States
 	std::string systemName;
-	std::vector<Astro_Object*> systemSatellites; // Vector of all orbiting bodies
-	Astro_Object * systemCentralObject; // Central object in container
+	// std::vector<Astro_Object*> systemSatellites; // Vector of all orbiting bodies
+	std::vector<Orbiting_Body*> systemSatellites; // Vector of all orbiting bodies
+	Central_Object * systemCentralObject; // Central object in container
 
 	public:
 		// Constructors
@@ -31,10 +32,12 @@ class System_Container
 		void setSystemName(std::string newName);
 
 		float * runSim(float * time);
+		float * getOrbitalPeriods();
+
 		
 		// Behaviour to provide container functionality
-		void addOrbitingBody(Astro_Object * newSat); // Add an orbiting body
-		void addCentralObject(Astro_Object * newCentralObject); // Add the system's central object
+		void addOrbitingBody(Orbiting_Body * newSat); // Add an orbiting body
+		void addCentralObject(Central_Object * newCentralObject); // Add the system's central object
 		int getNumObjects(); // Return no. of objects in system
 		bool removeOrbitingBody(std::string satName); // Remove an orbiting body
 		void getCatalogue(); // Get a catalogue of all objects in the system

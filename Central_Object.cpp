@@ -28,8 +28,6 @@ Central_Object::Central_Object(string name, float radius, float temp, float mass
 void Central_Object::setOrbitalSpeed(float centralObjMass)
 {
 	orbitalSpeed = 0;
-	cout << "SET CENTRAL" << endl;
-
 }
 
 void Central_Object::updatePos(float time, float centralObjMass)

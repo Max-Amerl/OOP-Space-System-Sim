@@ -13,7 +13,7 @@ This is the primary driver for the system simulation that implements all functio
 using namespace std;
 
 extern void startSim();
-extern void getData(System_Container orbitSystem);
+extern void getData(System_Container * orbitSystem, Orbiting_Body * orbitingObjs, int numOrbitingObj);
 extern void viewInstructions();
 extern void runSimulation(System_Container * container);
 
@@ -44,12 +44,24 @@ int main(void)
 		cin.get();
 		
 		System_Container orbitSystem = System_Container(systemName);
+		System_Container * containerPtr = &orbitSystem;
 
-		getData(orbitSystem);
+		int numOrbitingObj;
+
+		cout << "Input Required Number of Orbiting Objects: " << endl;
+		cin >> numOrbitingObj;
+		cout << endl;
+
+		Orbiting_Body * orbitingObjs = new Orbiting_Body[numOrbitingObj];
+
+		getData(containerPtr, orbitingObjs, numOrbitingObj);
 		
 		cout << "Press 'S' to start simulation" << endl;
-		
-		runSimulation(&orbitSystem);
+
+
+		runSimulation(containerPtr);
+
+		delete[] orbitingObjs;
 	}
 }
 

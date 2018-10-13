@@ -11,6 +11,8 @@ This file is a testing file for debugging purposes and to see if each class is w
 #include <string>
 #include <iostream>
 
+extern void runSimulation(System_Container * container);
+
 using namespace std;
 
 // Main function to test classes
@@ -22,12 +24,11 @@ int main(void)
 	const int NUM_SAT = 5;
 	Orbiting_Body satellites[NUM_SAT];
 	System_Container gravSystem = System_Container("Star System");
-	Central_Object centralSMBH = Central_Object("Sagitarius A", 1, 8000, 100);
+	Central_Object centralSMBH = Central_Object("Sagittarius A", 1, 8000, 100);
 	centralSMBH.setOrbitalSpeed(100);
 
-	Central_Object * centralObj = new Central_Object;
+	Central_Object * centralObj = &centralSMBH;
 
-	centralObj = &centralSMBH;
 
 	Orbiting_Body * sysSats = new Orbiting_Body[NUM_SAT];
 
@@ -60,20 +61,23 @@ int main(void)
 	}
 
 	gravSystem.addCentralObject(centralObj);
-	float * positionPtr;
+	// float * positionPtr;
+	System_Container * containerPtr = &gravSystem;
 
-	while (timeCounter <= 100000)
-	{
-		for (int i = 0; i < NUM_SAT; i++)
-		{
-			sysSats[i]. updatePos(timeCounter, centralObj -> getObjMass());
-			positionPtr = sysSats[i].getPosition();
-			cout << "Star " << i+1 << " (" << *(positionPtr + 0) << ", " << *(positionPtr + 1) << ")" << endl;
-		}
-		cout << "--------------------------" << endl;
+	runSimulation(containerPtr);
 
-		timeCounter += 1000; 
-	}
+	// while (timeCounter <= 100000)
+	// {
+	// 	for (int i = 0; i < NUM_SAT; i++)
+	// 	{
+	// 		sysSats[i]. updatePos(timeCounter, centralObj -> getObjMass());
+	// 		positionPtr = sysSats[i].getPosition();
+	// 		cout << "Star " << i+1 << " (" << *(positionPtr + 0) << ", " << *(positionPtr + 1) << ")" << endl;
+	// 	}
+	// 	cout << "--------------------------" << endl;
+
+	// 	timeCounter += 1000; 
+	// }
 
 
 	// for (int i = 0; i < 5; i++)
@@ -81,7 +85,24 @@ int main(void)
 	// 	cout << sysSats[i].getOrbitalSpeed() << endl;
 	// }
 	gravSystem.getCatalogue();
-	delete[] centralObj;
+
+
+	cout << "MEM ADDRESSES" << endl;
+	cout << "CENTRAL " << &centralObj << endl;
+
+	for (int i = 0; i < 5; i++)
+	{
+		cout << "SATELLITE " << i << " " << &sysSats[i] << endl;
+	}
+
+	cout << "CONTAINER " << &gravSystem << endl;
+
+
+
+
+
+
+
 	delete[] sysSats;
 	return 0;
 }
